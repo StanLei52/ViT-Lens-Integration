@@ -1,0 +1,63 @@
+model:
+  arch: instruct_vicuna7b
+  load_finetuned: False
+  load_pretrained: True
+
+  pretrained: "https://huggingface.co/TencentARC/ViT-Lens/resolve/main/instruct_blip_vicuna7b_trimmed.pth" # do not change this
+  finetuned: ""
+
+  pc_tokenizer_cfg:
+    trans_dim: 384
+    group_size: 32
+    num_group: 512
+    encoder_dim: 256
+
+  perceiver_cfg:
+    input_chan: 384
+    input_axis: 1
+    num_freq_bands: 32
+    max_freq: 10
+    depth: 6
+    num_latents: 256
+    latent_dim: 1408
+    cross_heads: 1
+    latent_heads: 16
+    cross_dim_head: 88
+    latent_dim_head: 88
+    num_classes: 1000
+    attn_dropout: 0.
+    ff_dropout: 0.
+    weight_tie_layers: False
+    fourier_encode_data: False
+    self_per_cross_attn: 1
+    final_classifier_head: False
+
+  # vit encoder
+  image_size: 224
+  drop_path_rate: 0
+  use_grad_checkpoint: False
+  vit_precision: "fp16"
+  freeze_vit: True
+  # Q-Former
+  num_query_token: 32
+
+  # path to Vicuna checkpoint
+  llm_model: "eachadea/vicuna-7b-1.1"
+
+  # generation configs
+  prompt: ""
+
+
+preprocess:
+    vis_processor:
+        train:
+          name: "blip2_image_train"
+          image_size: 224
+        eval:
+          name: "blip_image_eval"
+          image_size: 224
+    text_processor:
+        train:
+          name: "blip_caption"
+        eval:
+          name: "blip_caption"
